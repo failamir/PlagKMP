@@ -1,6 +1,9 @@
-<?php
-class Doc2Txt{
-    private $filename;
+<?php 
+
+namespace App\Http\Controllers;	
+	
+class Convert{
+	private $filename;
 
     public function __construct($filePath) {
         $this->filename = $filePath;
@@ -53,49 +56,48 @@ class Doc2Txt{
         return $content;
     }
 
- /************************excel sheet************************************/
+	 /************************excel sheet************************************/
 
-function xlsx_to_text($input_file){
-    $xml_filename = "xl/sharedStrings.xml"; //content file name
-    $zip_handle = new ZipArchive;
-    $output_text = "";
-    if(true === $zip_handle->open($input_file)){
-        if(($xml_index = $zip_handle->locateName($xml_filename)) !== false){
-            $xml_datas = $zip_handle->getFromIndex($xml_index);
-            $xml_handle = DOMDocument::loadXML($xml_datas, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
-            $output_text = strip_tags($xml_handle->saveXML());
-        }else{
-            $output_text .="";
-        }
-        $zip_handle->close();
-    }else{
-    $output_text .="";
-    }
-    return $output_text;
-}
+	function xlsx_to_text($input_file){
+	    $xml_filename = "xl/sharedStrings.xml"; //content file name
+	    $zip_handle = new ZipArchive;
+	    $output_text = "";
+	    if(true === $zip_handle->open($input_file)){
+	        if(($xml_index = $zip_handle->locateName($xml_filename)) !== false){
+	            $xml_datas = $zip_handle->getFromIndex($xml_index);
+	            $xml_handle = DOMDocument::loadXML($xml_datas, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+	            $output_text = strip_tags($xml_handle->saveXML());
+	        }else{
+	            $output_text .="";
+	        }
+	        $zip_handle->close();
+	    }else{
+	    $output_text .="";
+	    }
+	    return $output_text;
+	}
 
-/*************************power point files*****************************/
-function pptx_to_text($input_file){
-    $zip_handle = new ZipArchive;
-    $output_text = "";
-    if(true === $zip_handle->open($input_file)){
-        $slide_number = 1; //loop through slide files
-        while(($xml_index = $zip_handle->locateName("ppt/slides/slide".$slide_number.".xml")) !== false){
-            $xml_datas = $zip_handle->getFromIndex($xml_index);
-            $xml_handle = DOMDocument::loadXML($xml_datas, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
-            $output_text .= strip_tags($xml_handle->saveXML());
-            $slide_number++;
-        }
-        if($slide_number == 1){
-            $output_text .="";
-        }
-        $zip_handle->close();
-    }else{
-    $output_text .="";
-    }
-    return $output_text;
-}
-
+	/*************************power point files*****************************/
+	function pptx_to_text($input_file){
+	    $zip_handle = new ZipArchive;
+	    $output_text = "";
+	    if(true === $zip_handle->open($input_file)){
+	        $slide_number = 1; //loop through slide files
+	        while(($xml_index = $zip_handle->locateName("ppt/slides/slide".$slide_number.".xml")) !== false){
+	            $xml_datas = $zip_handle->getFromIndex($xml_index);
+	            $xml_handle = DOMDocument::loadXML($xml_datas, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+	            $output_text .= strip_tags($xml_handle->saveXML());
+	            $slide_number++;
+	        }
+	        if($slide_number == 1){
+	            $output_text .="";
+	        }
+	        $zip_handle->close();
+	    }else{
+	    $output_text .="";
+	    }
+	    return $output_text;
+	}
 
     public function convertToText() {
 
@@ -120,6 +122,6 @@ function pptx_to_text($input_file){
             return "Invalid File Type";
         }
     }
-
 }
+	
 ?>
