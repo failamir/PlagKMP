@@ -92,32 +92,28 @@ class CheckController extends Controller
 
     public function ajaxRead(Request $request) {
 
-
-
-        /*$testWord->saveAs('result.docx');
-
-
-
-    	$docObj = new Convert("uploads/" .$request->fileName);
-		$txt = $docObj->convertToText();
-		$pieces = explode('</w:r></w:p>', $txt);
-		$striped_content = '';
-		for($i = 0; $i < count($pieces); $i++) {
-			$striped_content = $striped_content . '<br />' . strip_tags($pieces[$i]);
-		} */
-
-       /* $phpWord = \PhpOffice\PhpWord\IOFactory::load("uploads/58bf5a9901392_1488935577.docx");
-        dd($phpWord);*/
         $docObj = new Convert("uploads/58bf5aba698f3_1488935610.docx");
         $txt = $docObj->convertToText();
-        $pieces = explode('<w:instrtext xml:space="preserve"></w:instrtext>', $txt);
-        $striped_content = '';
-        for($i = 0; $i < count($pieces); $i++) {
-            $striped_content = $striped_content . '<br />' . strip_tags($pieces[$i]);
-        }
+        
+        $doc = new \DOMDocument();
+        $doc->loadXML($txt, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
 
-        $wordInfo = new WordInfo("uploads/58bf5aba698f3_1488935610.docx");
-        echo $txt;
+        $domNodeList = $doc->getElementsByTagname('toc'); 
+        $domElemsToRemove = array(); 
+        foreach ( $domNodeList as $domElement ) { 
+          
+          $domElemsToRemove[] = $domElement; 
+        } 
+        foreach( $domElemsToRemove as $domElement ){ 
+          $domElement->parentNode->removeChild($domElement); 
+        } 
+
+        
+        $output_text = ($doc->saveHTML($doc->documentElement));
+
+       
+        echo ($output_text);
+       
     }
 
     public function ajaxRead1(Request $request) {

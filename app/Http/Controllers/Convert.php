@@ -50,8 +50,10 @@ class Convert{
 
         zip_close($zip);
 
-        $content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
-      //  $content = str_replace('</w:r></w:p>', "\r\n", $content);
+        $content = str_replace('<w:instrText xml:space="preserve">', "<toc>", $content);
+        $content = str_replace('</w:instrText>', "</toc>", $content);
+        $content = str_replace('<w:rPr>', "<toc>", $content);
+        $content = str_replace('</w:instrText>', "</toc>", $content);
         //$striped_content = strip_tags($content);
 
         return $content;
