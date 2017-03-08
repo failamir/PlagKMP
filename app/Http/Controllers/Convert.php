@@ -1,7 +1,8 @@
 <?php 
 
 namespace App\Http\Controllers;	
-	
+
+
 class Convert{
 	private $filename;
 

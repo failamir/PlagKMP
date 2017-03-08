@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileInfo;
 use Input;
+use PhpOffice\PhpWord\Element\Table;
+use PhpOffice\PhpWord\Element\Text;
+use PhpOffice\PhpWord\Element\TOC;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Element\Footer;
 
 class CheckController extends Controller
 {
@@ -44,9 +49,11 @@ class CheckController extends Controller
         	$fileName = $file->getClientOriginalName();
         	$fileSize = round($file->getSize()/1024, 1) . " KB";
 	        if($extension !== 'docx') {
-	        	$messages->appendChild($doc->createTextNode("2"));
-	        	echo $doc->saveHTML($doc->documentElement);
-	        	return;
+	        	if($extension !== 'doc') {
+	        		$messages->appendChild($doc->createTextNode("2"));
+	        		echo $doc->saveHTML($doc->documentElement);
+	        		return;
+	        	}
 	        }
 
 	        $fileInfo = new FileInfo($request->file);
@@ -84,13 +91,39 @@ class CheckController extends Controller
     }
 
     public function ajaxRead(Request $request) {
+
+
+
+        /*$testWord->saveAs('result.docx');
+
+
+
     	$docObj = new Convert("uploads/" .$request->fileName);
 		$txt = $docObj->convertToText();
 		$pieces = explode('</w:r></w:p>', $txt);
 		$striped_content = '';
 		for($i = 0; $i < count($pieces); $i++) {
 			$striped_content = $striped_content . '<br />' . strip_tags($pieces[$i]);
-		} 
-		echo $striped_content;
-    } 
+		} */
+
+       /* $phpWord = \PhpOffice\PhpWord\IOFactory::load("uploads/58bf5a9901392_1488935577.docx");
+        dd($phpWord);*/
+        $docObj = new Convert("uploads/58bf5aba698f3_1488935610.docx");
+        $txt = $docObj->convertToText();
+        $pieces = explode('<w:instrtext xml:space="preserve"></w:instrtext>', $txt);
+        $striped_content = '';
+        for($i = 0; $i < count($pieces); $i++) {
+            $striped_content = $striped_content . '<br />' . strip_tags($pieces[$i]);
+        }
+
+        $wordInfo = new WordInfo("uploads/58bf5aba698f3_1488935610.docx");
+        echo $txt;
+    }
+
+    public function ajaxRead1(Request $request) {
+        $phpWord = \PhpOffice\PhpWord\IOFactory::load("uploads/58bf5aba698f3_1488935610.docx");
+        dd($phpWord);
+        /*$wordInfo = new WordInfo("uploads/58bf5aba698f3_1488935610.docx");
+        dd($wordInfo->getListItem1());*/
+    }
 }

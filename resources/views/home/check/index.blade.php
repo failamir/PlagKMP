@@ -109,7 +109,7 @@
 					  	if($result.text() == 1) {
 					  		$('.result').html("<span class='col-md-4 col-md-offset-4' style='color:red'>Bạn chưa chọn chủ đề</span>");
 					  	}else if($result.text() == 2) {
-					  		$('.result').html("<span class='col-md-4 col-md-offset-4' style='color:red'>File phải có định dạng .docx</span>");
+					  		$('.result').html("<span class='col-md-4 col-md-offset-4' style='color:red'>File phải có định dạng .doc hoặc .docx</span>");
 					  	}else if($result.text() == 3) {
 					  		$('.result').html("<span class='col-md-4 col-md-offset-4' style='color:red'>Chưa chọn file upload</span>");
 					  	}else {
