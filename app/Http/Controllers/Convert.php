@@ -7,7 +7,14 @@ class Convert{
 	private $filename;
 
     public function __construct($filePath) {
-        $this->filename = $filePath;
+        if($filePath === mb_convert_encoding(mb_convert_encoding($filePath, "UTF-32", "UTF-8"), "UTF-8", "UTF-32"))
+        {
+            $this->filename = $filePath;
+        }else
+        {
+            $this->filename = mb_convert_encoding($filePath, 'UTF-8','CP850');
+        }
+
     }
 
     private function read_doc() {
@@ -30,6 +37,7 @@ class Convert{
 
     private function read_docx(){
 
+
         $striped_content = '';
         $content = '';
 
@@ -50,10 +58,8 @@ class Convert{
 
         zip_close($zip);
 
-        $content = str_replace('<w:instrText xml:space="preserve">', "<toc>", $content);
-        $content = str_replace('</w:instrText>', "</toc>", $content);
-        $content = str_replace('<w:rPr>', "<toc>", $content);
-        $content = str_replace('</w:instrText>', "</toc>", $content);
+        //$content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
+        //$content = str_replace('</w:r></w:p>', "\r\n", $content);
         //$striped_content = strip_tags($content);
 
         return $content;
@@ -125,6 +131,41 @@ class Convert{
             return "Invalid File Type";
         }
     }
+
+    public function getHyperlink() {
+        $dom = new \DOMDocument();
+        $dom->loadXML($this->read_docx(), LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+        $books = $dom->getElementsByTagName('hyperlink');
+        foreach ($books as $book) {
+            echo $book->nodeValue, PHP_EOL;
+        }
+    }
+
+
+    public function removeNode($xml, $nodeName) {
+        $dom = new \DOMDocument();
+        $dom->loadXML($xml, LIBXML_NOENT | LIBXML_XINCLUDE | LIBXML_NOERROR | LIBXML_NOWARNING);
+
+        $domNodeList = $dom->getElementsByTagname($nodeName);
+        $domElemsToRemove = array();
+        foreach ( $domNodeList as $domElement ) {
+
+            $domElemsToRemove[] = $domElement;
+        }
+        foreach( $domElemsToRemove as $domElement ){
+            $domElement->parentNode->removeChild($domElement);
+        }
+        return $dom->saveHTML($dom->documentElement);
+    }
+
+
+
+
+
+
+
+
+
 }
 	
 ?>

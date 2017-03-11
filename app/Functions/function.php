@@ -8,7 +8,7 @@
 
 // Chạy cmd : composer  dumpautoload
 
-function changeTitle($str,$strSymbol='-',$case=MB_CASE_LOWER){// MB_CASE_UPPER / MB_CASE_TITLE / MB_CASE_LOWER
+function change($str,$strSymbol='-',$case=MB_CASE_LOWER){// MB_CASE_UPPER / MB_CASE_TITLE / MB_CASE_LOWER
 	$str=trim($str);
 	if ($str=="") return "";
 	$str =str_replace('"','',$str);

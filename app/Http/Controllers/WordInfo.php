@@ -67,19 +67,19 @@ class WordInfo
             {
                 if ($el instanceof Text)
                 {
-                    $str = $str . $el->getText() . ' ';
+                    $str = $str . trim($el->getText()) . ' ';
                 }
 
                 if ($el instanceof TextRun)
                 {
                     if(count($el->getElements()) > 0  and $el->getElements()[0] instanceof Text) {
-                        $str = $str . $el->getElements()[0]->getText(). ' ';
+                        $str = $str . trim($el->getElements()[0]->getText());
                     }
                 }
 
                 if ($el instanceof ListItem) {
                     if($el->getDepth() == 0) {
-                        $str = $str . $el->getText() . ' ';
+                        $str = $str . trim($el->getText()) . ' ';
                     }
                 }
             }
@@ -124,23 +124,13 @@ class WordInfo
 
     public function getPageSize() {
         $str = '';
-        $titles = $this->phpWord->getTitles()->getItems();
-        foreach ($titles as $i => $title) {
-            /** @var \PhpOffice\PhpWord\Element\Title $title Type hint */
-            $depth = $title->getDepth();
-
-        }
         foreach ($this->sections as $section) {
             foreach ($section->getElements() as $el) {
                 if ($el instanceof PreserveText)
                 {
-
                     foreach ($el->getText() as $item) {
-                        //dd(explode('\h \z \u', $item));
-                        echo $item;
+                        $str = $str . $item;
                     }
-
-
                 }
             }
         }

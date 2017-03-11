@@ -24,6 +24,6 @@ Route::get('/', function () {
 Route::get('/', ['as' => 'checkIndex', 'uses' => 'CheckController@index']);
 
 Route::post('ajax/upload/plagiarism', ['as' => 'ajaxCheck', 'uses' => 'CheckController@ajaxUpload']);
-Route::get('ajax/read/plagiarism', ['as' => 'ajaxCheck', 'uses' => 'CheckController@ajaxRead']);
+Route::post('ajax/read/plagiarism', ['as' => 'ajaxCheck', 'uses' => 'CheckController@ajaxRead']);
 
 Route::get('ajax/read/plagiarism1', ['as' => 'ajaxCheck', 'uses' => 'CheckController@ajaxRead1']);

@@ -8,19 +8,14 @@ class FileInfo{
 	private $fileType;
 	private $uid;
 
-	public function __construct($fileName) {
-		$this->fileName = $fileName;
+	public function __construct() {
+		$this->fileName = '';
 		$this->fileSize = '';
 		$this->fileType = '';
 		$this->uid = '';
 	}
 
-	/*public function __construct($fileName, $fileSize, $fileType, $uid) {
-		$this->fileName = $fileName;
-		$this->fileSize = $fileSize;
-		$this->fileType = $fileType;
-		$this->uid = $uid;
-	}*/
+
 
 	function setFileName($fileName) {
 		$this->fileName = $fileName;
@@ -122,9 +117,37 @@ class FileInfo{
 		return $str;
 	}
 
-	function infoFile() {
-		echo "<span class='col-md-4 col-md-offset-4'>". "<h3>Thông tin file: </h3>Tên file: " . $this->getFileName() . "<br />Kích cỡ: " . $this->getFileSize() . "<br />Định dạng: " . $this->getFileType() ."</span>";
-	}
+    private function read_docx(){
+
+        $striped_content = '';
+        $content = '';
+
+        $zip = zip_open($this->fileName);
+
+        if (!$zip || is_numeric($zip)) return false;
+
+        while ($zip_entry = zip_read($zip)) {
+
+            if (zip_entry_open($zip, $zip_entry) == FALSE) continue;
+
+            if (zip_entry_name($zip_entry) != "word/document.xml") continue;
+
+            $content .= zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+
+            zip_entry_close($zip_entry);
+        }// end while
+
+        zip_close($zip);
+
+        //$content = str_replace('</w:r></w:p></w:tc><w:tc>', " ", $content);
+        //$content = str_replace('</w:r></w:p>', "\r\n", $content);
+        //$striped_content = strip_tags($content);
+
+        return $content;
+    }
+
+
+
 }
 
 ?>

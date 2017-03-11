@@ -53,15 +53,16 @@
                             <button id="uploadFile" class="btn btn-default">Check</button>
                         </div>
                     </div>
+					<div class="resultText">
+
+					</div>
                     <div class="result">
                         <!-- <label class="col-md-4 control-label" for="send"></label>
                         <div class="col-md-4">
                             <img id="loading" src="images/loading.gif" height="15" width="128" alt="kiểm tra bài luận của bạn ..." >
                         </div> -->
                     </div>
-                    <div class="resultText">
-                        
-                    </div>
+
 	            </div>
 	            
 	        </div>
@@ -113,17 +114,18 @@
 					  	}else if($result.text() == 3) {
 					  		$('.result').html("<span class='col-md-4 col-md-offset-4' style='color:red'>Chưa chọn file upload</span>");
 					  	}else {
-					  		
+                            $('.resultText').addClass('form-group');
 					  		$('.resultText').html("<span class='col-md-4 col-md-offset-4'>" + "<h3>Thông tin file: </h3>Tên file: " + $xml.find('fileName').text() + "<br />Kích cỡ: " + $xml.find('fileSize').text() + "<br />Định dạng: " + $xml.find('fileType').text() + "</span>");
 
-					  		$('.result').html('<label class="col-md-4 control-label" for="send"></label><div class="col-md-4"><img id="loading" src="images/loading.gif" height="15" width="128">  Reading ...</div>');
+					  		$('.result').html('<label class="col-md-4 control-label" for="send"></label><div class="col-md-4"><img id="loading" src="images/loading.gif" height="15" width="128">  Checking ...</div>');
 					  		var data = new FormData();
 						    data.append('fileName', $xml.find('success').text());
+						    data.append('keyword', $xml.find('keyword').text());
 						    $.ajaxSetup({
 						        headers: {'X-CSRF-Token': $('meta[name=_token]').attr('content')}
 						    });
 					  		$.ajax({
-						        url: "{{url('ajax/read/plagiarism')}}", 
+						        url: "{{url('ajax/read/plagiarism')}}",
 						        data: data,
 						        type: 'POST',
 						        contentType: false,       
